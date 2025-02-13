@@ -1,26 +1,43 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import HomeScreen from "./src/components/screens/HomeScreen";
+import CalendarScreen from "./src/components/screens/CalendarScreen";
+import EducationScreen from "./src/components/screens/EducationScreen";
+
+const Stack = createNativeStackNavigator();
 
 export const App = () => {
   // Initialisations
-  // States
+  // State
   // Handlers
   // View
   return (
-    <View style={styles.container}>
-      <Text>Hello World!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="HomeScreen"
+        screenOptions={{
+          headerStyle: { backgroundColor: "black" },
+          headerTintColor: "white",
+        }}
+      >
+        <Stack.Screen
+          name="HomeScreen"
+          component={HomeScreen}
+          options={{ title: "Diabetes App" }}
+        />
+        <Stack.Screen
+          name="CalendarScreen"
+          component={CalendarScreen}
+          options={{ title: "Calendar" }}
+        />
+        <Stack.Screen
+          name="EducationScreen"
+          component={EducationScreen}
+          options={{ title: "Learn about Diabetes" }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default App;
