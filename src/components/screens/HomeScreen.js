@@ -1,5 +1,6 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import Screen from "../layout/Screen";
+import HomeScreenItem from "../entity/HomeScreenItem.js";
 
 const HomeScreen = ({ navigation }) => {
   // Initialisations
@@ -12,31 +13,17 @@ const HomeScreen = ({ navigation }) => {
   // View
   return (
     <Screen>
-      <View>
-        <ScrollView>
-          return (
-          <Pressable onPress={goToCalendarScreen} style={styles.item}>
-            <Text style={styles.text}>Go to Calendar Screen</Text>
-          </Pressable>
-          <Pressable onPress={goToEducationScreen} style={styles.item}>
-            <Text style={styles.text}>Go to Education Screen</Text>
-          </Pressable>
-          );
-        </ScrollView>
-      </View>
+      <ScrollView style={styles.container}>
+        <HomeScreenItem title={"Calendar"} onSelect={goToCalendarScreen} />
+        <HomeScreenItem
+          title={"Learn about Diabetes"}
+          onSelect={goToEducationScreen}
+        />
+      </ScrollView>
     </Screen>
   );
 };
 
-const styles = StyleSheet.create({
-  item: {
-    paddingVertical: 15,
-    borderTopWidth: 1,
-    borderColor: "lightgrey",
-  },
-  text: {
-    fontSize: 16,
-  },
-});
+const styles = StyleSheet.create({});
 
 export default HomeScreen;
