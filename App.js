@@ -23,7 +23,7 @@ export const App = () => {
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
-          options={{ title: "Diabetes App" }}
+          options={{ title: "Home" }}
         />
         <Stack.Screen
           name="CalendarScreen"

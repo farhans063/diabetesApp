@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View, Text } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 
 const HomeScreenItem = ({ title, onSelect }) => {
   // Initialisations
@@ -6,10 +6,8 @@ const HomeScreenItem = ({ title, onSelect }) => {
   // Handlers
   // View
   return (
-    <Pressable onPress={onSelect}>
-      <View style={styles.item}>
-        <Text style={styles.text}>{title}</Text>
-      </View>
+    <Pressable style={styles.item} onPress={onSelect}>
+      <Text style={styles.text}>{title}</Text>
     </Pressable>
   );
 };
@@ -17,14 +15,16 @@ const HomeScreenItem = ({ title, onSelect }) => {
 const styles = StyleSheet.create({
   item: {
     paddingVertical: 10,
-    borderTopWidth: 1,
-    borderColor: "lightgrey",
-    backgroundColor: "light",
+    borderTopWidth: 2,
+    borderColor: "grey",
+    backgroundColor: "limegreen",
+    borderRadius: 10,
+    marginBottom: 5,
   },
   text: {
-    fontSize: 18,
-    textAlign: "left",
-    fontWeight: "bold",
+    fontSize: 20,
+    fontWeight: "800",
+    paddingInline: 10,
   },
 });
 

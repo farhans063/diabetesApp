@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, ScrollView, Text } from "react-native";
 import Screen from "../layout/Screen";
 
 const EducationScreen = () => {
@@ -8,11 +8,28 @@ const EducationScreen = () => {
   // View
   return (
     <Screen>
-      <Text>Education Screen</Text>
+      <ScrollView>
+        <Text style={styles.title}>Learn about Diabetes</Text>
+        <Text style={styles.subtitle}>
+          Here you will find articles and websites that teach you how to manage
+          your diabetes effectively.
+        </Text>
+      </ScrollView>
     </Screen>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 26,
+    fontWeight: "900",
+  },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: "800",
+    color: "grey",
+    marginBottom: 25,
+  },
+});
 
 export default EducationScreen;
