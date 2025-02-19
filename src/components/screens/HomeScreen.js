@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Text, ScrollView } from "react-native";
+import { StyleSheet, Image, Text } from "react-native";
 import Screen from "../layout/Screen";
 import HomeScreenItem from "../entity/HomeScreenItem.js";
 
@@ -9,23 +9,21 @@ const HomeScreen = ({ navigation }) => {
   // View
   return (
     <Screen>
-      <ScrollView>
-        <Image
-          source={require("../../data/DiabetesTrackerLogo4.jpg")}
-          style={styles.image}
-        />
-        <Text style={styles.subtitle}>
-          Here to help you manage your diabetes a little better, everyday!
-        </Text>
-        <HomeScreenItem
-          title={"Calendar"}
-          onSelect={() => navigation.navigate("CalendarScreen")}
-        />
-        <HomeScreenItem
-          title={"Learn about Diabetes"}
-          onSelect={() => navigation.navigate("EducationScreen")}
-        />
-      </ScrollView>
+      <Image
+        source={require("../../data/DiabetesTrackerLogo4.jpg")}
+        style={styles.image}
+      />
+      <Text style={styles.subtitle}>
+        Here to help you manage your diabetes a little better, everyday!
+      </Text>
+      <HomeScreenItem
+        title={"Calendar"}
+        onSelect={() => navigation.navigate("CalendarScreen")}
+      />
+      <HomeScreenItem
+        title={"Learn about Diabetes"}
+        onSelect={() => navigation.navigate("EducationScreen")}
+      />
     </Screen>
   );
 };

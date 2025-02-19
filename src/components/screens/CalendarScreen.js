@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Text, TextInput, Pressable, Keyboard, StyleSheet } from "react-native";
 import Screen from "../layout/Screen";
+import { Calendar } from "react-native-calendars";
 
 const CalendarScreen = () => {
   const [reading, setReading] = useState("");
   const [allReadings, setAllReadings] = useState([]);
+  const [userSelectedDate, setUserSelectedData] = useState("");
 
   const handleAdd = () => {
     if (reading.trim() !== "") {
@@ -17,6 +19,13 @@ const CalendarScreen = () => {
   return (
     <Screen>
       <Text style={styles.title}>Calendar</Text>
+      <Calendar
+        onDayPress={(day) => setUserSelectedData(day.dateString)}
+        markedDates={{
+          [userSelectedDate]: { selected: true, selectedColor: "grey" },
+        }}
+      />
+
       <Text style={styles.text}>Enter a reading in mmol/L:</Text>
       <TextInput
         style={styles.input}
