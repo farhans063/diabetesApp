@@ -20,6 +20,7 @@ const CalendarScreen = () => {
   const [reading, setReading] = useState("");
   const [allReadings, setAllReadings] = useState([]);
 
+  // Handler
   const handleAdd = () => {
     if (reading.trim() !== "") {
       setAllReadings([...allReadings, reading]);
@@ -28,13 +29,28 @@ const CalendarScreen = () => {
     }
   };
 
+  // View
   return (
     <Screen>
-      <Text style={styles.title}>Calendar</Text>
       <Calendar
         onDayPress={(day) => setUserSelectedDate(day.dateString)}
         markedDates={{
-          [userSelectedDate]: { selected: true, selectedColor: "grey" },
+          [userSelectedDate]: { selected: true, selectedColor: "limegreen" },
+        }}
+        theme={{
+          calendarBackground: "lightgrey",
+          monthTextColor: "black",
+          textMonthFontSize: 18,
+          textMonthFontWeight: 800,
+          arrowColor: "black",
+          textSectionTitleColor: "black",
+          textDayHeaderFontSize: 14,
+          textDayHeaderFontWeight: "bold",
+          textDayFontSize: 16,
+          textDayFontWeight: "bold",
+          textDisabledColor: "grey",
+          dayTextColor: "black",
+          todayTextColor: "limegreen",
         }}
       />
       {userSelectedDate === today && (
