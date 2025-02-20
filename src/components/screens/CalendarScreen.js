@@ -7,7 +7,8 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
 import Screen from "../layout/Screen";
@@ -20,6 +21,31 @@ const CalendarScreen = () => {
   const [userSelectedDate, setUserSelectedDate] = useState(today);
   const [reading, setReading] = useState("");
   const [allReadings, setAllReadings] = useState({});
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const storedData = await AsyncStorage.getItem("ReadingsData");
+        if (storedData) {
+          setAllReadings(JSON.parse(storedData));
+        }
+      } catch (error) {
+        console.error(`Error loading data: ${error}`);
+      }
+    };
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        await AsyncStorage.setItem("ReadingsData", JSON.stringify(allReadings));
+      } catch (error) {
+        console.error(`Error saving data: ${error}`);
+      }
+    };
+    saveData();
+  }, [allReadings]);
 
   // Handler
   const handleAdd = () => {
