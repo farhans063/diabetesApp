@@ -1,12 +1,24 @@
+import {
+  Text,
+  TextInput,
+  Pressable,
+  Keyboard,
+  StyleSheet,
+  View,
+} from "react-native";
 import React, { useState } from "react";
-import { Text, TextInput, Pressable, Keyboard, StyleSheet } from "react-native";
-import Screen from "../layout/Screen";
 import { Calendar } from "react-native-calendars";
+import moment from "moment";
+import Screen from "../layout/Screen";
 
 const CalendarScreen = () => {
+  // Initialisations
+  const today = moment().format("YYYY-MM-DD");
+
+  // States
+  const [userSelectedDate, setUserSelectedDate] = useState(today);
   const [reading, setReading] = useState("");
   const [allReadings, setAllReadings] = useState([]);
-  const [userSelectedDate, setUserSelectedData] = useState("");
 
   const handleAdd = () => {
     if (reading.trim() !== "") {
@@ -20,23 +32,28 @@ const CalendarScreen = () => {
     <Screen>
       <Text style={styles.title}>Calendar</Text>
       <Calendar
-        onDayPress={(day) => setUserSelectedData(day.dateString)}
+        onDayPress={(day) => setUserSelectedDate(day.dateString)}
         markedDates={{
           [userSelectedDate]: { selected: true, selectedColor: "grey" },
         }}
       />
-
-      <Text style={styles.text}>Enter a reading in mmol/L:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Add a reading..."
-        keyboardType="numeric"
-        value={reading}
-        onChangeText={setReading}
-      />
-      <Pressable style={styles.pressable} onPress={handleAdd}>
-        <Text style={styles.pressableText}>Add</Text>
-      </Pressable>
+      {userSelectedDate === today && (
+        <View>
+          <Text style={styles.text}>Enter a reading in mmol/L:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Add a reading..."
+            keyboardType="numeric"
+            value={reading}
+            onChangeText={setReading}
+          />
+          <Pressable style={styles.pressable} onPress={handleAdd}>
+            <Text style={styles.pressableText}>Add</Text>
+          </Pressable>
+        </View>
+      )}
+      <Text>User selected date: {userSelectedDate}</Text>
+      <Text>Todays date: {today}</Text>
       {allReadings.map((reading, index) => (
         <Text key={index} style={styles.list}>
           {reading}
