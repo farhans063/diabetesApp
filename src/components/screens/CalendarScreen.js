@@ -5,6 +5,7 @@ import {
   Keyboard,
   StyleSheet,
   View,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { Calendar } from "react-native-calendars";
@@ -18,12 +19,15 @@ const CalendarScreen = () => {
   // States
   const [userSelectedDate, setUserSelectedDate] = useState(today);
   const [reading, setReading] = useState("");
-  const [allReadings, setAllReadings] = useState([]);
+  const [allReadings, setAllReadings] = useState({});
 
   // Handler
   const handleAdd = () => {
-    if (reading.trim() !== "") {
-      setAllReadings([...allReadings, reading]);
+    if (reading.trim()) {
+      setAllReadings((allReadings) => ({
+        ...allReadings,
+        [userSelectedDate]: [...(allReadings[userSelectedDate] || []), reading],
+      }));
       setReading("");
       Keyboard.dismiss();
     }
@@ -32,81 +36,97 @@ const CalendarScreen = () => {
   // View
   return (
     <Screen>
-      <Calendar
-        onDayPress={(day) => setUserSelectedDate(day.dateString)}
-        markedDates={{
-          [userSelectedDate]: { selected: true, selectedColor: "limegreen" },
-        }}
-        theme={{
-          calendarBackground: "lightgrey",
-          monthTextColor: "black",
-          textMonthFontSize: 18,
-          textMonthFontWeight: 800,
-          arrowColor: "black",
-          textSectionTitleColor: "black",
-          textDayHeaderFontSize: 14,
-          textDayHeaderFontWeight: "bold",
-          textDayFontSize: 16,
-          textDayFontWeight: "bold",
-          textDisabledColor: "grey",
-          dayTextColor: "black",
-          todayTextColor: "limegreen",
-        }}
-      />
-      {userSelectedDate === today && (
+      <ScrollView>
+        <Text style={styles.title}>Calendar</Text>
+        <Calendar
+          onDayPress={(day) => setUserSelectedDate(day.dateString)}
+          markedDates={{
+            [userSelectedDate]: { selected: true, selectedColor: "limegreen" },
+          }}
+          theme={{
+            calendarBackground: "lightgrey",
+            monthTextColor: "black",
+            textMonthFontSize: 18,
+            textMonthFontWeight: 800,
+            arrowColor: "black",
+            textSectionTitleColor: "black",
+            textDayHeaderFontSize: 14,
+            textDayHeaderFontWeight: "bold",
+            textDayFontSize: 16,
+            textDayFontWeight: "bold",
+            textDisabledColor: "grey",
+            dayTextColor: "black",
+            todayTextColor: "limegreen",
+          }}
+        />
+        {userSelectedDate === today && (
+          <View>
+            <Text style={styles.text}>
+              Enter your blood glucose reading (mmol/L):
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Add a reading..."
+              keyboardType="numeric"
+              value={reading}
+              onChangeText={setReading}
+            />
+            <Pressable style={styles.pressable} onPress={handleAdd}>
+              <Text style={styles.pressableText}>Add</Text>
+            </Pressable>
+          </View>
+        )}
         <View>
-          <Text style={styles.text}>Enter a reading in mmol/L:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Add a reading..."
-            keyboardType="numeric"
-            value={reading}
-            onChangeText={setReading}
-          />
-          <Pressable style={styles.pressable} onPress={handleAdd}>
-            <Text style={styles.pressableText}>Add</Text>
-          </Pressable>
+          {allReadings[userSelectedDate] &&
+          allReadings[userSelectedDate].length > 0 ? (
+            allReadings[userSelectedDate].map((item, index) => (
+              <Text key={index} style={styles.othertext}>
+                {item}
+              </Text>
+            ))
+          ) : (
+            <Text style={styles.othertext}>
+              No readings were submitted on this date.
+            </Text>
+          )}
         </View>
-      )}
-      <Text>User selected date: {userSelectedDate}</Text>
-      <Text>Todays date: {today}</Text>
-      {allReadings.map((reading, index) => (
-        <Text key={index} style={styles.list}>
-          {reading}
-        </Text>
-      ))}
+      </ScrollView>
     </Screen>
   );
 };
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 30,
-    fontWeight: "800",
+    fontSize: 20,
+    fontWeight: "900",
+    textAlign: "center",
+    marginBottom: 5,
   },
   text: {
-    fontSize: 20,
+    marginTop: 10,
+    fontSize: 16,
     fontWeight: "800",
-    color: "grey",
   },
   input: {
     borderWidth: 1,
     borderColor: "grey",
     padding: 10,
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 5,
   },
   pressable: {
     backgroundColor: "grey",
     padding: 10,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   pressableText: {
     color: "white",
     fontWeight: "bold",
-  },
-  list: {
     fontSize: 18,
+    textAlign: "center",
+  },
+  othertext: {
+    fontSize: 16,
   },
 });
 
