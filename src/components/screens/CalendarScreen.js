@@ -21,6 +21,7 @@ const CalendarScreen = () => {
   const [userSelectedDate, setUserSelectedDate] = useState(today);
   const [reading, setReading] = useState("");
   const [allReadings, setAllReadings] = useState({});
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const loadData = async () => {
@@ -49,21 +50,37 @@ const CalendarScreen = () => {
 
   // Handler
   const handleAdd = () => {
-    if (reading.trim()) {
-      setAllReadings((allReadings) => ({
-        ...allReadings,
-        [userSelectedDate]: [...(allReadings[userSelectedDate] || []), reading],
-      }));
-      setReading("");
-      Keyboard.dismiss();
+    setAllReadings((allReadings) => ({
+      ...allReadings,
+      [userSelectedDate]: [...(allReadings[userSelectedDate] || []), reading],
+    }));
+    Keyboard.dismiss();
+
+    const convertedReading = parseFloat(reading);
+
+    if (convertedReading >= 4 && convertedReading <= 7) {
+      setMessage("Heathy range. Keep doing what you're doing!");
+    } else if (convertedReading > 7 && convertedReading < 11) {
+      setMessage("High: consider exercising regularly.");
+    } else if (convertedReading < 4) {
+      setMessage(
+        "Very low immediately eat or drink something sweet, check again in 10-15 mins."
+      );
+    } else if (convertedReading >= 11) {
+      setMessage(
+        "Very high: drink plenty of water, exercise and avoid eating too much sugary or starchy food."
+      );
+    } else {
+      setMessage("Unable to interpret blood glucose range");
     }
+
+    setReading("");
   };
 
   // View
   return (
     <Screen>
       <ScrollView>
-        <Text style={styles.title}>Calendar</Text>
         <Calendar
           onDayPress={(day) => setUserSelectedDate(day.dateString)}
           markedDates={{
@@ -85,11 +102,13 @@ const CalendarScreen = () => {
             todayTextColor: "limegreen",
           }}
         />
+
         {userSelectedDate === today && (
           <View>
             <Text style={styles.text}>
-              Enter your blood glucose reading (mmol/L):
+              Enter blood glucose reading (mmol/L):
             </Text>
+
             <TextInput
               style={styles.input}
               placeholder="Add a reading..."
@@ -97,21 +116,31 @@ const CalendarScreen = () => {
               value={reading}
               onChangeText={setReading}
             />
-            <Pressable style={styles.pressable} onPress={handleAdd}>
+
+            <Pressable
+              style={styles.pressable}
+              onPress={handleAdd}
+              disabled={reading.trim() === ""}
+            >
               <Text style={styles.pressableText}>Add</Text>
             </Pressable>
+
+            <Text style={styles.readingRange}>
+              Current blood glucose levels: {message}
+            </Text>
           </View>
         )}
+        <Text style={styles.text}>Readings from {userSelectedDate}</Text>
         <View>
           {allReadings[userSelectedDate] &&
           allReadings[userSelectedDate].length > 0 ? (
             allReadings[userSelectedDate].map((item, index) => (
-              <Text key={index} style={styles.othertext}>
+              <Text key={index} style={styles.listText}>
                 {item}
               </Text>
             ))
           ) : (
-            <Text style={styles.othertext}>
+            <Text style={styles.listText}>
               No readings were submitted on this date.
             </Text>
           )}
@@ -130,7 +159,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 10,
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "800",
   },
   input: {
@@ -151,8 +180,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
   },
-  othertext: {
-    fontSize: 16,
+  readingRange: {
+    color: "grey",
+    fontSize: 18,
+    fontWeight: "800",
+  },
+  listText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    padding: 2,
+    paddingInline: 10,
   },
 });
 
