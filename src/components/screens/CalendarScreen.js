@@ -7,8 +7,8 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useEffect } from "react";
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
 import Screen from "../layout/Screen";
@@ -19,7 +19,7 @@ const CalendarScreen = () => {
 
   // States
   const [userSelectedDate, setUserSelectedDate] = useState(today);
-  const [reading, setReading] = useState("");
+  const [reading, setReading] = useState(null);
   const [allReadings, setAllReadings] = useState({});
   const [message, setMessage] = useState("");
 
@@ -50,31 +50,30 @@ const CalendarScreen = () => {
 
   // Handler
   const handleAdd = () => {
-    setAllReadings((allReadings) => ({
+    const newData = {
       ...allReadings,
       [userSelectedDate]: [...(allReadings[userSelectedDate] || []), reading],
-    }));
+    };
+    setAllReadings(newData);
+
     Keyboard.dismiss();
 
-    const convertedReading = parseFloat(reading);
-
-    if (convertedReading >= 4 && convertedReading <= 7) {
+    if (reading >= 4 && reading <= 7) {
       setMessage("Heathy range. Keep doing what you're doing!");
-    } else if (convertedReading > 7 && convertedReading < 11) {
-      setMessage("High: consider exercising regularly.");
-    } else if (convertedReading < 4) {
+    } else if (reading > 7 && reading < 11) {
+      setMessage("High, consider exercising.");
+    } else if (reading < 4) {
       setMessage(
-        "Very low immediately eat or drink something sweet, check again in 10-15 mins."
+        "Very low, immediately eat or drink something sweet, check again in 10-15 mins."
       );
-    } else if (convertedReading >= 11) {
+    } else if (reading >= 11) {
       setMessage(
-        "Very high: drink plenty of water, exercise and avoid eating too much sugary or starchy food."
+        "Very high, drink plenty of water, exercise and avoid eating too much sugary food."
       );
     } else {
       setMessage("Unable to interpret blood glucose range");
     }
-
-    setReading("");
+    setReading(null);
   };
 
   // View
@@ -120,20 +119,20 @@ const CalendarScreen = () => {
             <Pressable
               style={styles.pressable}
               onPress={handleAdd}
-              disabled={reading.trim() === ""}
+              disabled={reading == null}
             >
               <Text style={styles.pressableText}>Add</Text>
             </Pressable>
-
-            <Text style={styles.readingRange}>
-              Current blood glucose levels: {message}
-            </Text>
+            <View>
+              <Text style={styles.readingRange}>
+                Blood glucose levels: {message}
+              </Text>
+            </View>
           </View>
         )}
         <Text style={styles.text}>Readings from {userSelectedDate}</Text>
         <View>
-          {allReadings[userSelectedDate] &&
-          allReadings[userSelectedDate].length > 0 ? (
+          {allReadings[userSelectedDate]?.length > 0 ? (
             allReadings[userSelectedDate].map((item, index) => (
               <Text key={index} style={styles.listText}>
                 {item}
